@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PK STREAMZ | WORLD CUP 26 4k</title>
+    <title>PK STREAMZ | WORLD CUP 26</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -27,13 +27,12 @@
             min-height: 100vh; max-width: 100vw; overflow-x: hidden; position: relative; 
         }
 
-        /* World Cup themed backdrop (pure CSS) */
+        /* Sky-blue World Cup backdrop */
         body {
             background:
-              radial-gradient(circle at 14% 12%, rgba(0,240,255,0.10) 0%, transparent 45%),
-              radial-gradient(circle at 86% 10%, rgba(212,175,55,0.14) 0%, transparent 45%),
-              radial-gradient(circle at 50% 122%, rgba(0,255,102,0.12) 0%, transparent 55%),
-              linear-gradient(180deg, #05070e 0%, #03040a 60%, #030305 100%);
+              radial-gradient(circle at 50% -8%, rgba(255,255,255,0.45) 0%, transparent 46%),
+              radial-gradient(circle at 86% 12%, rgba(212,175,55,0.16) 0%, transparent 40%),
+              linear-gradient(180deg, #7ec8f2 0%, #4ea6e0 44%, #2f7fc0 100%);
             background-attachment: fixed;
         }
         
@@ -432,36 +431,71 @@
             
             if (rawServers.length > 0) setTimeout(() => loadStream(rawServers[0].url), 200);
 
-            // API Logic
-            const API_KEY = ""; 
-            const API_BASE = "https://v3.football.api-sports.io";
-            const API_HEADERS = { "x-rapidapi-host": "v3.football.api-sports.io", "x-apisports-key": API_KEY };
+            // ESPN free public API (no key, no signup) — FIFA World Cup feed
+            const ESPN_URL = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard";
             const liveContainer = document.getElementById('api-live-match');
             const fixContainer = document.getElementById('api-fixtures');
-            
-            async function fetchRealFootballData() {
-                if(!API_KEY) return;
-                try {
-                    const liveRes = await fetch(`${API_BASE}/fixtures?league=1&season=2026&live=all`, { headers: API_HEADERS });
-                    const liveData = await liveRes.json();
-                    if(liveData.response && liveData.response.length > 0) {
-                        const match = liveData.response[0]; const score = `${match.goals.home} - ${match.goals.away}`; const minute = match.fixture.status.elapsed + "'"; 
-                        liveContainer.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding: 0 10px;"><div style="text-align:center;"><img src="${match.teams.home.logo}" width="60" style="border-radius:8px; margin-bottom:5px;"><br><span style="font-weight:bold; font-family:var(--font-display); font-size:1.2rem;">${match.teams.home.name}</span></div><div style="text-align:center;"><div style="font-size:2.5rem; font-weight:800; color:var(--gold-primary); text-shadow:0 0 15px var(--gold-primary);">${score}</div><div style="display:inline-block; background:rgba(0, 255, 102, 0.1); color:var(--neon-green); padding:4px 12px; border-radius:20px; font-weight:bold; border:1px solid var(--neon-green); margin-top:5px;"><span class="live-dot" style="display:inline-block; margin-right:5px; width:6px; height:6px;"></span>${minute}</div></div><div style="text-align:center;"><img src="${match.teams.away.logo}" width="60" style="border-radius:8px; margin-bottom:5px;"><br><span style="font-weight:bold; font-family:var(--font-display); font-size:1.2rem;">${match.teams.away.name}</span></div></div>`;
-                    } else { liveContainer.innerHTML = `<div class="unavailable-text" style="color:#aaa; text-shadow:none;">NO LIVE MATCHES CURRENTLY</div>`; }
 
-                    const todayDate = new Date().toISOString().split('T')[0];
-                    const nextRes = await fetch(`${API_BASE}/fixtures?league=1&season=2026&date=${todayDate}`, { headers: API_HEADERS });
-                    const nextData = await nextRes.json();
-                    if(nextData.response && nextData.response.length > 0) {
+            function ymd(d){ return d.toISOString().split('T')[0].replace(/-/g,''); }
+
+            function parseEvent(ev){
+                const comp = (ev.competitions && ev.competitions[0]) || {};
+                const st = comp.status || ev.status || {};
+                const state = (st.type && st.type.state) ? st.type.state : 'pre';
+                const cs = comp.competitors || [];
+                const home = cs.find(c => c.homeAway === 'home') || cs[0] || {};
+                const away = cs.find(c => c.homeAway === 'away') || cs[1] || {};
+                const team = c => (c.team && (c.team.shortDisplayName || c.team.displayName)) || 'TBD';
+                const logo = c => (c.team && c.team.logo) || '';
+                return {
+                    state, date: comp.date || ev.date,
+                    clock: st.displayClock || '',
+                    detail: (st.type && (st.type.shortDetail || st.type.detail)) || '',
+                    home: { name: team(home), logo: logo(home), score: home.score || '0' },
+                    away: { name: team(away), logo: logo(away), score: away.score || '0' }
+                };
+            }
+
+            async function fetchRealFootballData() {
+                try {
+                    const now = new Date();
+                    const end = new Date(now.getTime() + 12*86400000);
+                    const res = await fetch(`${ESPN_URL}?dates=${ymd(now)}-${ymd(end)}&limit=100`);
+                    const data = await res.json();
+                    const all = (data.events || []).map(parseEvent);
+                    const live = all.filter(m => m.state === 'in');
+                    const upcoming = all.filter(m => m.state === 'pre').sort((a,b) => new Date(a.date) - new Date(b.date)).slice(0, 6);
+
+                    // ----- LIVE MATCH CENTER -----
+                    if (live.length) {
+                        const m = live[0];
+                        liveContainer.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; width:100%; padding:0 10px;"><div style="text-align:center;">${m.home.logo?`<img src="${m.home.logo}" width="56" style="margin-bottom:6px;">`:''}<br><span style="font-weight:bold; font-family:var(--font-display); font-size:1.1rem;">${m.home.name}</span></div><div style="text-align:center;"><div style="font-size:2.4rem; font-weight:800; color:var(--gold-primary); text-shadow:0 0 15px var(--gold-primary);">${m.home.score} - ${m.away.score}</div><div style="display:inline-block; background:rgba(0,255,102,0.1); color:var(--neon-green); padding:4px 12px; border-radius:20px; font-weight:bold; border:1px solid var(--neon-green); margin-top:5px;"><span class="live-dot" style="display:inline-block; margin-right:5px; width:6px; height:6px;"></span>${m.clock || m.detail || 'LIVE'}</div></div><div style="text-align:center;">${m.away.logo?`<img src="${m.away.logo}" width="56" style="margin-bottom:6px;">`:''}<br><span style="font-weight:bold; font-family:var(--font-display); font-size:1.1rem;">${m.away.name}</span></div></div>`;
+                    } else {
+                        liveContainer.innerHTML = `<div class="unavailable-text" style="color:#aaa; text-shadow:none;">NO LIVE MATCHES CURRENTLY</div>`;
+                    }
+
+                    // ----- UPCOMING MATCHES -----
+                    if (upcoming.length) {
                         let html = '<div style="width:100%; display:flex; flex-direction:column; gap:10px;">';
-                        nextData.response.forEach(match => {
-                            const matchDate = new Date(match.fixture.date); const timeString = matchDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }); const dateString = matchDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                            html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background:rgba(0,0,0,0.5); border:1px solid var(--glass-border); border-radius:8px;"><div style="display:flex; align-items:center; gap:10px;"><img src="${match.teams.home.logo}" width="25"><span style="font-weight:bold; font-size:0.9rem;">${match.teams.home.name} <span style="color:#888;">vs</span> ${match.teams.away.name}</span><img src="${match.teams.away.logo}" width="25"></div><div style="text-align:right;"><div style="color:var(--electric-cyan); font-weight:bold; font-size:0.9rem;">${timeString}</div><div style="color:#888; font-size:0.75rem;">${dateString}</div></div></div>`;
-                        }); html += '</div>'; fixContainer.innerHTML = html;
-                    } else { fixContainer.innerHTML = `<div class="unavailable-text" style="color:#aaa; text-shadow:none;">NO MATCHES SCHEDULED FOR TODAY</div>`; }
-                } catch (error) { console.log(error); }
+                        upcoming.forEach(m => {
+                            const d = new Date(m.date);
+                            const t = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                            const ds = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                            html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background:rgba(0,0,0,0.5); border:1px solid var(--glass-border); border-radius:8px;"><div style="display:flex; align-items:center; gap:10px;">${m.home.logo?`<img src="${m.home.logo}" width="24">`:''}<span style="font-weight:bold; font-size:0.9rem;">${m.home.name} <span style="color:#888;">vs</span> ${m.away.name}</span>${m.away.logo?`<img src="${m.away.logo}" width="24">`:''}</div><div style="text-align:right;"><div style="color:var(--electric-cyan); font-weight:bold; font-size:0.9rem;">${t}</div><div style="color:#888; font-size:0.75rem;">${ds}</div></div></div>`;
+                        });
+                        html += '</div>';
+                        fixContainer.innerHTML = html;
+                    } else {
+                        fixContainer.innerHTML = `<div class="unavailable-text" style="color:#aaa; text-shadow:none;">NO UPCOMING MATCHES FOUND</div>`;
+                    }
+                } catch (error) {
+                    console.log(error);
+                    liveContainer.innerHTML = `<div class="unavailable-text" style="color:#aaa; text-shadow:none;">LIVE DATA UNAVAILABLE</div>`;
+                    fixContainer.innerHTML = `<div class="unavailable-text" style="color:#aaa; text-shadow:none;">FIXTURES UNAVAILABLE</div>`;
+                }
             }
             fetchRealFootballData();
+            setInterval(fetchRealFootballData, 60000);
             
             setInterval(() => { document.getElementById('local-time').textContent = new Date().toLocaleTimeString('en-US', {hour12: false}); }, 1000);
             document.querySelectorAll('.glass-panel').forEach(panel => {

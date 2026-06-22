@@ -1,0 +1,155 @@
+{
+  "updated": "2026-06-21",
+  "servers": [
+    {
+      "name": "TNS (FHD)",
+      "url": "https://embed.st/embed/admin/ppv-tunisia-vs-japan/1",
+      "embedUrl": "https://xyzstreams.shop/wc-1-embed",
+      "category": "FIFA World Cup,Sports",
+      "type": "embed"
+    },
+    {
+      "name": "Fox Streams",
+      "url": "https://xyzstreams.shop/wc-1-embed",
+      "embedUrl": "https://xyzstreams.shop/wc-1-embed",
+      "category": "FIFA World Cup,Sports",
+      "type": "embed"
+    },
+    {
+      "name": "FIFA FS1",
+      "url": "https://xyzstreams.shop/wc-2-embed.html",
+      "embedUrl": "https://xyzstreams.shop/wc-2-embed.html",
+      "category": "FIFA World Cup,Sports",
+      "type": "embed"
+    },
+    {
+      "name": "FIFA Special 4K — Stream 1",
+      "url": "https://1nyaler.streamhostingcdn.top/stream/94/index.m3u8",
+      "embedUrl": "https://findleembeds.pages.dev/embed/telemundo-4k",
+      "category": "FIFA World Cup,Sports,4K",
+      "type": "hls"
+    },
+    {
+      "name": "BBC (FHD)",
+      "url": "https://embed.st/embed/admin/ppv-tunisia-vs-japan/5",
+      "embedUrl": "",
+      "category": "FIFA World Cup,Sports",
+      "type": "embed"
+    },
+    {
+      "name": "FOX (4K HEVC)",
+      "url": "https://xyzstreams.shop/wc-5-embed.html",
+      "embedUrl": "https://xyzstreams.shop/wc-5-embed.html",
+      "category": "FIFA World Cup,4K",
+      "type": "embed"
+    },
+    {
+      "name": "US (EN) FOX 4K (HEVC)",
+      "url": "https://xyzstreams.shop/wc-5-embed.html",
+      "embedUrl": "https://xyzstreams.shop/wc-5-embed.html",
+      "category": "FIFA World Cup,Sports",
+      "type": "embed"
+    },
+    {
+      "name": "CA TNS Streams",
+      "url": "https://xyzstreams.shop/wc-7-embed.html",
+      "embedUrl": "https://xyzstreams.shop/wc-7-embed.html",
+      "category": "FIFA World Cup,Sports,4K",
+      "type": "embed"
+    },
+    {
+      "name": "TSN (4K HEVC)",
+      "url": "https://xyzstreams.shop/wc-8-embed.html",
+      "embedUrl": "https://xyzstreams.shop/wc-8-embed.html",
+      "category": "Sports,FIFA World Cup,4K",
+      "type": "embed"
+    },
+    {
+      "name": "🇨🇦 (EN) TSN 4K",
+      "url": "https://xyzstreams.shop/wc-8-embed.html",
+      "embedUrl": "https://xyzstreams.shop/wc-8-embed.html",
+      "category": "FIFA World Cup,Sports,4K",
+      "type": "embed"
+    },
+    {
+      "name": "FUSSBALL TV 1 UHD",
+      "url": "https://junkieembeds.pages.dev/embed/fusballtv1uhd-de",
+      "embedUrl": "https://findleembeds.pages.dev/embed/fusballtv1uhd-de",
+      "category": "Sports,FIFA World Cup,4K",
+      "type": "embed"
+    },
+    {
+      "name": "FUSSBALL TV 2 4k",
+      "url": "https://junkieembeds.pages.dev/embed/fusballtv2uhd-de",
+      "embedUrl": "https://findleembeds.pages.dev/embed/fusballtv2uhd-de",
+      "category": "Sports,FIFA World Cup,4K",
+      "type": "embed"
+    },
+    {
+      "name": "Fussball TV1",
+      "url": "https://junkieembeds.pages.dev/embed/fusballtvuhd-de",
+      "embedUrl": "https://findleembeds.pages.dev/embed/fusballtvuhd-de",
+      "category": "FIFA World Cup,Sports,4K",
+      "type": "embed"
+    },
+    {
+      "name": "Somoy TV",
+      "url": "https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8",
+      "embedUrl": "",
+      "category": "Bangladesh",
+      "type": "hls"
+    },
+    {
+      "name": "Caze TV 4K",
+      "url": "https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/1080p-vtt/index.m3u8",
+      "embedUrl": "",
+      "category": "Sports",
+      "type": "hls"
+    },
+    {
+      "name": "Sangeet Bangla",
+      "url": "https://cdn-4.pishow.tv/live/1143/master.m3u8",
+      "embedUrl": "",
+      "category": "Music",
+      "type": "hls"
+    },
+    {
+      "name": "Fox Cricket",
+      "url": "https://junkieembeds.pages.dev/embed/fox-sports-501",
+      "embedUrl": "https://junkieembeds.pages.dev/embed/fox-sports-501",
+      "category": "FIFA World Cup,Sports,4K",
+      "type": "embed"
+    },
+    {
+      "name": "beIN Max 4K (Arabic) (HEVC)",
+      "url": "https://xyzstreams.shop/wc-10-embed.html",
+      "embedUrl": "https://xyzstreams.shop/wc-11-embed.html",
+      "category": "FIFA World Cup,Sports,4K",
+      "type": "embed"
+    },
+    {
+      "name": "FOX Direct (MPEG-DASH)",
+      "url": "https://otte.live.fly.ww.aiv-cdn.net/1hr-nitro/live/clients/dash/enc/ajfoeddkbz/out/v1/b78880b9b2304879b15843f455836829/cenc.mpd",
+      "embedUrl": "",
+      "category": "FIFA World Cup,Sports,4K",
+      "type": "mpd",
+      "drm_type": "clearkey",
+      "keyId": "f6564ec2acc819046328a0c153be574d",
+      "key": "ff46a8a1831eb27cf22576a077c98ab7"
+    },
+    {
+      "name": "Balle Balle Music",
+      "url": "https://mcncdndigital.com/balleballetv/index.m3u8",
+      "embedUrl": "",
+      "category": "Music",
+      "type": "hls"
+    },
+    {
+      "name": "Panjabi Hits Song",
+      "url": "https://stream.ottlive.co.in/punjabihits/tracks-v1a1/mono.m3u8",
+      "embedUrl": "",
+      "category": "Music",
+      "type": "hls"
+    }
+  ]
+}

@@ -3,29 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PK STREAMZ | WORLD CUP 26</title>
+    <title>PK STREAMZ | WORLD CUP 26 4k</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet">
     
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dash-shaka-playback@3.0.0/dist/dash-shaka-playback.min.js"></script>
     
     <style>
-        /* ==========================================================================
-           1. CORE VARIABLES & SETUP
-           ========================================================================== */
         :root {
             --bg-base: #030305; --neon-green: #00ff66; --gold-primary: #d4af37;
             --gold-light: #f3e5ab; --electric-cyan: #00f0ff; --danger-red: #ff3333;
             --glass-bg: rgba(15, 20, 25, 0.4); --glass-border: rgba(255, 255, 255, 0.08);
             --font-ui: 'Inter', sans-serif; --font-display: 'Rajdhani', sans-serif; --font-signature: 'Great Vibes', cursive;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        /* 100% Locked Viewport */
-        html, body { 
-            font-family: var(--font-ui); background-color: var(--bg-base); color: #ffffff; 
-            min-height: 100vh; max-width: 100vw; overflow-x: hidden; position: relative; 
-        }
+        html, body { font-family: var(--font-ui); background-color: var(--bg-base); color: #ffffff; min-height: 100vh; max-width: 100vw; overflow-x: hidden; position: relative; }
 
         /* Shiny black + gold backdrop (polished onyx, millionaire vibes) */
         body {
@@ -39,134 +31,110 @@
         }
         
         #particles-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
-
-        /* ==========================================================================
-           2. ANIMATIONS & GLASSMORPHISM
-           ========================================================================== */
         .animate-up { animation: fadeUp 0.8s ease-out forwards; opacity: 0; transform: translateY(30px); }
         .delay-1 { animation-delay: 0.2s; }
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-
+        
         .glass-panel { background: var(--glass-bg); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 16px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); position: relative; overflow: hidden; transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); width: 100%;}
         .glass-panel::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(212, 175, 55, 0.06), transparent 40%); z-index: 0; pointer-events: none; opacity: 0; transition: opacity 0.5s; }
         .glass-panel:hover::before { opacity: 1; }
         .glass-panel:hover { transform: translateY(-5px); border-color: rgba(212, 175, 55, 0.3); }
-
-        .border-trace { position: absolute; inset: 0; border-radius: 16px; padding: 2px; background: linear-gradient(90deg, transparent, var(--gold-primary), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.4s; }
+        
+        .border-trace { position: absolute; inset: 0; border-radius: 16px; padding: 2px; background: linear-gradient(90deg, transparent, var(--gold-primary), transparent); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.4s; pointer-events: none; z-index: 1;}
         .glass-panel:hover .border-trace { opacity: 1; animation: trace 3s linear infinite; }
         @keyframes trace { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
         @keyframes pulse-live { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 51, 51, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 51, 51, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 51, 51, 0); } }
-
-        /* ==========================================================================
-           3. HEADER & LAYOUT
-           ========================================================================== */
+        
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: linear-gradient(180deg, rgba(16,16,21,0.94) 0%, rgba(16,16,21,0.35) 60%, transparent 100%); border-bottom: 1px solid rgba(212,175,55,0.28); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); width: 100%;}
         .brand-name { font-family: var(--font-display); font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--gold-light), var(--gold-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; display: flex; align-items: center; gap: 15px; }
         .header-meta { display: flex; align-items: center; gap: 30px; }
         .time-display { font-family: var(--font-display); font-size: 1.2rem; color: var(--electric-cyan); font-weight: 600; text-align: right; }
         .live-indicator { display: flex; align-items: center; gap: 8px; color: #fff; background: rgba(255,51,51,0.15); padding: 8px 16px; border-radius: 30px; border: 1px solid var(--danger-red); font-family: var(--font-display); font-weight: 700; letter-spacing: 1px; white-space: nowrap;}
         .live-dot { width: 10px; height: 10px; background: var(--danger-red); border-radius: 50%; animation: pulse-live 1.5s infinite; }
-
+        
         .container { width: 100%; max-width: 1800px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 2.2fr 1fr; gap: 30px; box-sizing: border-box; }
         
-        .player-wrapper { position: relative; width: 100%; padding-top: 56.25%; border-radius: 16px; overflow: hidden; background: #000; border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(212, 175, 55, 0.1); }
-        .player-wrapper iframe, .player-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1; }
+        .player-wrapper { position: relative; width: 100%; padding-top: 56.25%; border-radius: 16px; overflow: hidden; background: #000; border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(212, 175, 55, 0.1); cursor: pointer; }
+        .player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 1; object-fit: cover;}
         .player-overlay { position: absolute; inset: 0; z-index: 5; background: #000; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); text-align: center; padding: 20px; transition: opacity 0.4s ease; opacity: 0; pointer-events: none; }
-
-        /* ==========================================================================
-           4. CATEGORIES & CHANNELS
-           ========================================================================== */
-        .category-bar { display: flex; gap: 10px; padding: 15px 25px 0; overflow-x: auto; scrollbar-width: none; position: relative; z-index: 10; width: 100%; }
+        
+        .category-bar { display: flex; gap: 10px; padding: 15px 25px 0; overflow-x: auto; scrollbar-width: none; width: 100%; position: relative; z-index: 10;}
         .category-bar::-webkit-scrollbar { display: none; }
-        .cat-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #aaa; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-family: var(--font-ui); font-weight: 600; white-space: nowrap; transition: 0.3s; position: relative; z-index: 10; }
+        .cat-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #aaa; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-family: var(--font-ui); font-weight: 600; white-space: nowrap; transition: 0.3s; position: relative; z-index: 10;}
         .cat-btn:hover { background: rgba(255,255,255,0.1); }
         .cat-btn.active { background: var(--electric-cyan); color: #000; border-color: var(--electric-cyan); }
-
-        .server-grid { display: flex; flex-wrap: wrap; gap: 12px; padding: 20px 25px 25px; max-height: 450px; overflow-y: auto; width: 100%; }
-        .server-grid::-webkit-scrollbar { width: 8px; }
-        .server-grid::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 8px; }
-        .server-grid::-webkit-scrollbar-thumb { background: var(--gold-primary); border-radius: 8px; }
-
-        .channel-wrapper { display: flex; position: relative; flex: 1 1 calc(33.333% - 12px); min-width: 200px; max-width: 100%; }
-        .server-btn { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #fff; padding: 14px 45px 14px 20px; border-radius: 8px; font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; z-index: 1; position: relative;}
+        
+        .server-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            gap: 12px; 
+            padding: 20px 25px 25px; 
+            max-height: 450px; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+            width: 100%; 
+            position: relative; 
+            z-index: 10;
+        }
+        
+        .server-grid::-webkit-scrollbar { width: 4px; height: 0px; }
+        .server-grid::-webkit-scrollbar-track { background: transparent; }
+        .server-grid::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 10px; }
+        .server-grid::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.7); }
+        
+        .channel-wrapper { position: relative; width: 100%; min-width: 0; } 
+        .server-btn { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #fff; padding: 14px 40px 14px 15px; border-radius: 8px; font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
         .server-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent); transition: 0.5s; z-index: -1; }
         .server-btn:hover::before { left: 100%; }
         .server-btn:hover { border-color: var(--gold-primary); transform: translateY(-2px); }
         .server-btn.active { background: rgba(212,175,55,0.15); border-color: var(--gold-primary); color: var(--gold-primary); box-shadow: 0 0 20px rgba(212,175,55,0.2); }
-
+        
         .fav-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 1.3rem; color: #444; cursor: pointer; z-index: 2; transition: 0.3s; padding: 5px; }
         .fav-btn:hover { color: #fff; transform: translateY(-50%) scale(1.2); }
         .fav-btn.active { color: var(--gold-primary); text-shadow: 0 0 10px var(--gold-primary); }
-
-        /* ==========================================================================
-           5. MISC PANELS
-           ========================================================================== */
+        
         .panel-header { font-family: var(--font-display); font-size: 1.2rem; color: var(--gold-primary); border-bottom: 1px solid var(--glass-border); padding: 20px; display: flex; align-items: center; gap: 10px; letter-spacing: 1px; }
-        .panel-content { padding: 25px; min-height: 150px; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .panel-content { padding: 25px; min-height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .unavailable-text { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: #ff4444; text-shadow: 0 0 15px rgba(255,0,0,0.4); text-align: center; letter-spacing: 1px; }
         
+        .browser-notice { background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.25); border-radius: 16px; padding: 18px; text-align: center; width: 100%;}
+        .browser-notice h3 { color: #ffd700; margin-bottom: 8px; font-family: var(--font-display); letter-spacing: 1px;}
+        .browser-notice p { color: #fff; margin: 5px 0 15px 0; font-size: 0.9rem;}
         .browser-buttons { display:flex; justify-content:center; align-items:center; gap:15px; flex-wrap:wrap; }
-        .browser-buttons a { text-decoration:none; background:#ffd700; color:#000; padding:12px 20px; border-radius:10px; font-weight:700; text-align: center; font-size: 0.9rem;}
-        .browser-notice { background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.25); border-radius: 16px; padding: 18px; margin: 20px 0; backdrop-filter: blur(10px); text-align: center; width: 100%;}
-        .browser-notice h3 { color: #ffd700; margin-bottom: 8px; }
-        .browser-notice p { color: #fff; margin: 5px 0; font-size: 0.9rem;}
+        .browser-buttons a { text-decoration:none; background:#ffd700; color:#000; padding:12px 20px; border-radius:10px; font-weight:700; text-align: center; font-size: 0.9rem; transition: 0.3s;}
+        .browser-buttons a:hover { transform: scale(1.05); }
 
-        .source-link { width:100%; display:block; text-align:center; text-decoration:none; background:rgba(212,175,55,0.10); border:1px solid rgba(212,175,55,0.30); color:var(--gold-primary); padding:14px 18px; border-radius:8px; font-family:var(--font-display); font-weight:700; font-size:1.05rem; letter-spacing:1px; transition:all 0.3s ease; }
-        .source-link:hover { background:rgba(212,175,55,0.18); border-color:var(--gold-primary); transform:translateY(-2px); box-shadow:0 0 18px rgba(212,175,55,0.25); }
+        .source-link { width:100%; display:block; text-align:center; text-decoration:none; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); color:var(--gold-primary); padding:14px 18px; border-radius:8px; font-family:var(--font-display); font-weight:700; font-size:1.05rem; letter-spacing:1px; transition:all 0.3s ease; }
+        .source-link:hover { background:rgba(212,175,55,0.12); border-color:var(--gold-primary); transform:translateY(-2px); box-shadow:0 0 18px rgba(212,175,55,0.18); }
 
-        footer { margin-top: 60px; padding: 50px 20px; background: linear-gradient(0deg, rgba(10,10,14,0.92), transparent); border-top: 1px solid rgba(212, 175, 55, 0.2); text-align: center; position: relative; width: 100%;}
+        footer { margin-top: 60px; padding: 50px 20px; background: linear-gradient(0deg, rgba(10,10,14,0.92), transparent); border-top: 1px solid rgba(212, 175, 55, 0.2); text-align: center; width: 100%;}
         .footer-logo { font-family: var(--font-display); font-size: 1.5rem; color: #fff; letter-spacing: 2px; margin-bottom: 20px; }
         .footer-copyright { color: #888; font-size: 0.9rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        .developer-signature { margin-top: 20px; display: inline-block; position: relative; }
         .dev-label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; display: block;}
-        .signature { font-family: var(--font-signature); font-size: 2.5rem; color: var(--gold-primary); text-shadow: 0 0 15px var(--gold-primary); position: relative; display: inline-block; }
-
-        /* ==========================================================================
-           6. RESPONSIVE DESIGN (Heres your requested mobile layout!)
-           ========================================================================== */
+        .signature { font-family: var(--font-signature); font-size: 2.5rem; color: var(--gold-primary); text-shadow: 0 0 15px var(--gold-primary); }
+        
         @media (max-width: 1200px) { 
             .container { display: flex; flex-direction: column; } 
-            .channel-wrapper { flex: 1 1 calc(50% - 12px); } 
         }
-
         @media (max-width: 768px) {
-            /* 💡 হেডার বাম দিকে সাজানো হলো এবং ২ লাইনে আনা হলো */
             header { padding: 15px; flex-direction: column; gap: 10px; align-items: flex-start; text-align: left; }
-            .brand-name { font-size: 1.4rem; justify-content: flex-start; width: 100%; flex-wrap: nowrap; margin-bottom: 5px;}
-            .header-meta { width: 100%; justify-content: space-between; flex-direction: row; gap: 10px; flex-wrap: nowrap; }
+            .brand-name { font-size: 1.4rem; }
+            .header-meta { width: 100%; justify-content: space-between; flex-direction: row; gap: 10px; }
             .time-display { font-size: 1rem; text-align: left !important; }
             .live-indicator { width: auto; font-size: 0.8rem; padding: 6px 15px; }
             
-            .container { padding: 0 10px; gap: 15px; margin: 15px auto; }
-            .category-bar { padding: 12px 15px 0; gap: 8px; }
-            
-            .server-grid { padding: 15px; gap: 10px; max-height: 400px; }
-            /* 💡 চ্যানেলগুলো ২ কলামে (পাশাপাশি) আনা হলো */
-            .channel-wrapper { flex: 1 1 calc(50% - 10px); min-width: 140px; } 
-            .server-btn { padding: 12px 30px 12px 10px; font-size: 0.85rem; text-align: center; justify-content: center;}
-            .fav-btn { right: 8px; font-size: 1rem; }
-        }
-
-        @media (max-width: 480px) {
-            header { padding: 15px 10px; }
-            .brand-name { font-size: 1.2rem; flex-direction: row; gap: 5px; }
-            .brand-name span { display: inline; font-size: 1.1rem; color: #ddd; }
-            
-            .header-meta { flex-direction: row; justify-content: space-between; }
-            .time-display { font-size: 1rem; text-align: left !important; }
-            .live-indicator { width: auto; font-size: 0.75rem; padding: 6px 12px; }
-            
-            /* 💡 অতি ছোট স্ক্রিনেও চ্যানেল ২ কলামে থাকবে */
-            .channel-wrapper { flex: 1 1 calc(50% - 10px); min-width: 130px; } 
-            .server-btn { font-size: 0.8rem; padding: 10px 25px 10px 5px; }
+            .server-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 15px; }
+            .server-btn { padding: 12px 25px 12px 10px; font-size: 0.85rem; }
             .fav-btn { right: 5px; font-size: 1rem; }
+        }
+        @media (max-width: 480px) {
+            .server-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 12px; }
+            .server-btn { padding: 10px 25px 10px 8px; font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
-
     <canvas id="particles-bg"></canvas>
-
     <header>
         <div class="brand-name">🏆 PK STREAMZ <span style="font-weight:400;">– WORLD CUP 26 4k</span></div>
         <div class="header-meta">
@@ -181,20 +149,17 @@
     <main class="container">
         
         <div class="animate-up" style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
-            
-            <div class="player-wrapper">
-                <div id="player-overlay" class="player-overlay">
-                    <span id="player-msg" style="font-size: 1.2rem; font-weight: 700;">CONNECTING...</span>
-                </div>
+            <div class="player-wrapper" id="player-container">
+                <div id="player-overlay" class="player-overlay"><span id="player-msg" style="font-size: 1.2rem; font-weight: 700;">CONNECTING...</span></div>
                 
-                <iframe id="main-iframe" src="" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" referrerpolicy="origin" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" style="display:none;"></iframe>
-                <video id="main-video" controls autoplay playsinline style="display:none; background:#000;"></video>
+                <iframe id="main-iframe" src="" allowfullscreen="true" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" scrolling="no" frameborder="0" style="display:none;"></iframe>
+                
+                <div id="clappr-container" style="display:none; width:100%; height:100%; position:absolute; top:0; left:0; z-index:2;"></div>
             </div>
-
+            
             <div class="glass-panel">
                 <div class="border-trace"></div>
                 <div class="panel-header">📡 SELECT BROADCAST NETWORK</div>
-                
                 <div class="category-bar" id="category-container"></div>
                 <div class="server-grid" id="server-container"></div>
             </div>
@@ -204,28 +169,27 @@
             <div class="glass-panel">
                 <div class="border-trace"></div>
                 <div class="panel-header">🔴 LIVE MATCH CENTER</div>
-                <div class="panel-content" id="api-live-match"><div class="unavailable-text">FETCHING DATA...</div></div>
+                <div class="panel-content" id="api-live-match"><div class="unavailable-text">NO LIVE MATCHES CURRENTLY</div></div>
             </div>
-
             <div class="glass-panel">
                 <div class="border-trace"></div>
                 <div class="panel-header">📅 UPCOMING MATCHES</div>
-                <div class="panel-content" id="api-fixtures"><div class="unavailable-text">FETCHING DATA...</div></div>
+                <div class="panel-content" id="api-fixtures"><div class="unavailable-text">NO MATCHES SCHEDULED FOR TODAY</div></div>
             </div>
 
             <div class="glass-panel">
                 <div class="border-trace"></div>
                 <div class="panel-header">🔗 3RD PARTY SOURCES</div>
                 <div class="panel-content" style="gap:12px;">
-                    <a class="source-link" href="https://https://streamed.pk" target="_blank" rel="noopener">📺 Backup 3rd Party</a>
+                    <a class="source-link" href="https://streamed.pk" target="_blank" rel="noopener">📺 Backup 3rd Party</a>
                     <a class="source-link" href="https://noxxpromotions.edgeone.app/watch" target="_blank" rel="noopener">📺 Backup - pin: 000000</a>
                     <a class="source-link" href="https://streamcorner.fyi/fifa-world-cup" target="_blank" rel="noopener">📺 Backup - use ad block!</a>
                 </div>
             </div>
-
+            
             <div class="browser-notice glass-panel">
-                <h3 style="color: #ffd700; margin-bottom: 8px;">🛡️ Recommended Setup</h3>
-                <p style="color: #fff; margin-bottom: 15px; font-size: 0.9rem;">For the best viewing experience, please use <strong>Mozilla Firefox</strong> with <strong>uBlock Origin Extension</strong>.</p>
+                <h3>🛡️ Recommended Setup</h3>
+                <p>For the best viewing experience, please use <strong>Mozilla Firefox</strong> with <strong>uBlock Origin Extension</strong>.</p>
                 <div class="browser-buttons">
                     <a href="https://www.mozilla.org/firefox/" target="_blank">Download Firefox</a>
                     <a href="https://ublockorigin.com/" target="_blank">Get uBlock Origin</a>
@@ -239,75 +203,48 @@
     </footer>
 
     <script>
-        // ==========================================================================
-        // 1. CHANNELS
-        // ==========================================================================
-        const rawServers = [
-            { name: "FOX ", url: "https://junkieembeds.pages.dev/embed/fox-usa", category: "FIFA World Cup, 4K" },
-            { name: "FOX (4K HEVC)", url: "https://junkieembeds.pages.dev/embed/fox4k-usa", category: "FIFA World Cup,4K" },
-            { name: "US (EN) FOX 4K (HEVC)", url: "https://xyzstreams.shop/wc-5-embed.html", category: "FIFA World Cup, Sports" },
-            { name: "CA TNS ", url: "https://xyzstreams.shop/wc-7-embed.html", category: "FIFA World Cup, Sports,4K" },
-            { name: "TSN (4K HEVC)", url: "https://junkieembeds.pages.dev/embed/tsn-4k", category: "Sports,FIFA World Cup,4K" },
-            { name: "🇨🇦 (EN) TSN 4K ", url: "https://xyzstreams.shop/wc-8-embed.html", category: "FIFA World Cup, Sports,4K" },
-            
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        window.addEventListener('beforeunload', () => window.scrollTo(0, 0));
 
-             
-            { name: "FUSSBALL TV 1 UHD", url: "https://junkieembeds.pages.dev/embed/fusballtv1uhd-de", category: "Sports,FIFA World Cup,4K" },
-            { name: "FUSSBALL TV 1 4k ", url: " https://junkieembeds.pages.dev/embed/fusballtv1uhd-de", category: "Sports,FIFA World Cup,4K" },
-            { name: "FUSSBALL TV 2 4k ", url: " https://junkieembeds.pages.dev/embed/fusballtv2uhd-de", category: "Sports,FIFA World Cup,4K" },
-            { name: "Fusball TV1 No Commentary (4K HEVC)",url: "https://junkieembeds.pages.dev/embed/fusballtvuhd-de", category: "Sports,FIFA World Cup,4K" },
-
-
-
-            
-            { name: "FIFA Special 4K — Stream 1", url: "https://1nyaler.streamhostingcdn.top/stream/94/index.m3u8", category: "FIFA World Cup,Sports,4K" },
-            //{ name: "FIFA Special 4K — Stream 2", url: "https://1nyaler.streamhostingcdn.top/stream/32/index.m3u8", category: "FIFA World Cup,Sports,4K" },
-            //{ name: "BTV", url: "https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/index.m3u8", category: "Bangladesh" },
-            { name: "Somoy TV", url: "https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8", category: "Bangladesh" },
-            //{ name: "Hindi Songs", url: "https://epiconvh.akamaized.net/live/9XM/master_360.m3u8", category: "Music" },
-            //{ name: "Balle Balle Music", url: "https://mcncdndigital.com/balleballetv/index.m3u8", category: "Music" },
-            //{ name: "Punjabi Hits", url: "https://stream.ottlive.co.in/punjabihits/index.m3u8", category: "Music" },
-            //{ name: "Panjabi Hits Song", url: "https://stream.ottlive.co.in/punjabihits/tracks-v1a1/mono.m3u8", category: "Music" },
-            { name: "Caze TV 4K", url: "https://dfr80qz435crc.cloudfront.net/MNOP/Amagi/Caze/Caze_TV_BR/1080p-vtt/index.m3u8", category: "Sports" },
-            { name: "Sangeet Bangla", url: "https://cdn-4.pishow.tv/live/1143/master.m3u8", category: "Music" },
-            //{ name: "Yrf Music", url: "https://amg01412-xiaomiasia-yrfmusic-xiaomi-1rmk2.amagi.tv/ts-eu-w1-n2/playlist/amg01412-xiaomiasia-yrfmusic-xiaomi/cb573d1e786c678f9bd43d6fcef04382847b3dcb0e6c886470af4a9765d97800dbe8ae84ae5b910c4c9e1fc061017d360439cd1dd56c49c1da63b820743c4b21fdcde00080dd0d0cb1df11292ca36265299a7369cc350f7bd2ec5a2f803ebe764c53cb017c593f88f258a9734cc59e0a957f39e8fc8b307b24455a9c5a43e6a64cb7a9b30846d13df5e0014a957e14fa83439fd501b385865883438422a716c895f2dad1148be4ef598d6f77a02022405fbdc213b1c853b1d69b6d3c8f795a297437c790e335caa1e43d277debf6cac505b5739cc84d290146e935c8054de3dd4bd31b4d0fca325a8dff082b18b7cd5a2e03a8e4ab8bc1f852d769d6adf3d47f7098b94136178925ef2b253c9fead854aaf755c7e66dd5ef292a31cec711c0ddaad5bbf9cd6b8c35c6c2c39d3f6947774b57d50aecc93b9b61f6509ce33f6d1c414da69f15e383da553f2b0fa5884cdb1e1ef68adfd6915e759a2e4b1adb61df5a176583613f2bab7eafe84906e311038b3132ec4b75d1128edf02c1e78ab5486bcf9dad24d860e0b206d78c728a652e560fb6b2611f724573d4e1711e721ee740f7d8deee670363bda39a1ea19bfcbb9471df2d11bc632dc24e2570a8eeb9ce62ec/147/854x480_1724104/index.m3u8", category: "Music" },
-            //{ name: "Goldmines Bollywood", url: "https://tvsen6.aynaott.com/GoldminesBollywood/index.m3u8", category: "Movies" },
-            //{ name: "Moto patul", url: "https://live20.bozztv.com/giatvplayout7/giatv-209622/tracks-v1a1/mono.ts.m3u8 ", category: "Kids" },
-            //{ name: "Sony Mx", url: "https://mflixott.com/tv/toffee-by-maruf/live.php?id=sony_max&e=.m3u8", category: "Movies" },
-            //{ name: "Sony Max HD", url: "https://mflixott.com/tv/toffee-by-maruf/live.php?id=sony_max_hd&e=.m3u8", category: "Movies" },
-            //{ name: "SONY PIX HD", url: "https://botallen.live/t/32/master.m3u8?signature=98d52f857efce766d1975a3e5de438f9f8607528&unique=bd8cea6d4e431b3c75b9fb7b720a87c0", category: "Movies" },
-            //{ name: "BBC iPlayer", url: "https://junkieembeds.pages.dev/embed/bbc-4k", category: "FIFA World Cup, Sports,4K" },
-            { name: "Fusball TV1", url: "https://junkieembeds.pages.dev/embed/fusballtvuhd-de", category: "FIFA World Cup, Sports,4K" },
-            { name: "Fox Cricket", url: "https://junkieembeds.pages.dev/embed/fox-sports-501", category: "FIFA World Cup, Sports,4K" },
-            { name: " beIN Max 4K (Arabic) (HEVC)", url: "https://xyzstreams.shop/wc-10-embed.html ", category: "FIFA World Cup, Sports,4K" },
-            
-            
-             
-        ];
-
-        // ==========================================================================
-        // 2. SMART LOGIC (Favorites, Categories)
-        // ==========================================================================
-        localStorage.removeItem('rs_broken'); 
-
+        let rawServers = [];
         let favorites = JSON.parse(localStorage.getItem('rs_favs')) || [];
         let activeCategory = "All";
         let currentPlayingUrl = "";
+        
+        let clapprPlayer = null;
 
         const serverContainer = document.getElementById('server-container');
         const categoryContainer = document.getElementById('category-container');
+        const mainIframe = document.getElementById('main-iframe');
+        const clapprContainer = document.getElementById('clappr-container');
+        const playerOverlay = document.getElementById('player-overlay');
+        const playerMsg = document.getElementById('player-msg');
+        const playerWrapper = document.getElementById('player-container');
+
+        playerWrapper.addEventListener('dblclick', () => {
+            if (!document.fullscreenElement) {
+                playerWrapper.requestFullscreen().catch(err => console.log(err));
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        function switchToEmbed(embedUrl) {
+            clapprContainer.style.display = 'none';
+            mainIframe.style.display = 'block';
+            mainIframe.src = embedUrl;
+            playerOverlay.style.opacity = '0';
+        }
+
+        async function stopAllPlayers() {
+            if (clapprPlayer) { clapprPlayer.destroy(); clapprPlayer = null; }
+            mainIframe.src = "";
+        }
 
         function renderCategories() {
             let allCats = [];
-            rawServers.forEach(s => {
-                if(s.category) {
-                    s.category.split(',').forEach(c => allCats.push(c.trim()));
-                } else {
-                    allCats.push("Others");
-                }
-            });
+            rawServers.forEach(s => s.category ? s.category.split(',').forEach(c => allCats.push(c.trim())) : allCats.push("Others"));
             const categories = ["All", ...new Set(allCats)];
-            
             categoryContainer.innerHTML = "";
             categories.forEach(cat => {
                 const btn = document.createElement('button');
@@ -326,112 +263,97 @@
 
         function renderChannels() {
             serverContainer.innerHTML = "";
+            let filtered = rawServers.filter(s => activeCategory === "All" || (s.category ? s.category.split(',').map(c => c.trim()).includes(activeCategory) : false));
+            filtered.sort((a, b) => (favorites.includes(b.name) ? 1 : 0) - (favorites.includes(a.name) ? 1 : 0));
             
-            let filteredServers = rawServers.filter(s => {
-                if (activeCategory === "All") return true;
-                let cats = s.category ? s.category.split(',').map(c => c.trim()) : ["Others"];
-                return cats.includes(activeCategory);
-            });
-
-            filteredServers.sort((a, b) => {
-                let aFav = favorites.includes(a.name) ? 1 : 0;
-                let bFav = favorites.includes(b.name) ? 1 : 0;
-                return bFav - aFav; 
-            });
-
-            if (filteredServers.length === 0) {
-                serverContainer.innerHTML = `<div style="color:#aaa; width:100%; text-align:center; padding: 20px;">No channels available in this category.</div>`;
-                return;
-            }
-
-            filteredServers.forEach((server) => {
+            filtered.forEach(server => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'channel-wrapper';
-
                 const btn = document.createElement('button');
                 btn.className = `server-btn ${currentPlayingUrl === server.url ? 'active' : ''}`;
-                btn.innerHTML = `📺 ${server.name}`; 
+                btn.innerHTML = `📺 ${server.name}`;
+                btn.onclick = () => loadStream(server);
                 
-                btn.onclick = () => { renderChannels(); loadStream(server.url); };
-
                 const favIcon = document.createElement('span');
                 favIcon.className = `fav-btn ${favorites.includes(server.name) ? 'active' : ''}`;
                 favIcon.innerHTML = "★";
                 favIcon.onclick = (e) => { e.stopPropagation(); toggleFav(server.name); };
-
+                
                 wrapper.appendChild(btn); wrapper.appendChild(favIcon); serverContainer.appendChild(wrapper);
             });
         }
-        
-        // ==========================================================================
-        // 3. VIDEO PLAYER
-        // ==========================================================================
-        const mainIframe = document.getElementById('main-iframe');
-        const mainVideo = document.getElementById('main-video');
-        const playerOverlay = document.getElementById('player-overlay');
-        const playerMsg = document.getElementById('player-msg');
-        let streamTimeout; let hlsInstance = null;
 
-        function loadStream(url) {
-            currentPlayingUrl = url;
+        // 🚀 CLAPPR PLAYER LOGIC (With DRM Support)
+        async function loadStream(server) {
+            currentPlayingUrl = server.url;
             renderChannels();
+            playerOverlay.style.opacity = '1';
+            playerMsg.innerHTML = 'CONNECTING SECURELY...';
+            
+            await stopAllPlayers();
 
-            playerOverlay.style.opacity = '1'; playerOverlay.style.pointerEvents = 'auto';
-            playerMsg.style.color = 'var(--gold-primary)';
-            playerMsg.innerHTML = '<span class="live-dot" style="display:inline-block; margin-right:8px;"></span>CONNECTING...';
+            if (server.type === 'mpd' && server.drm_type === 'clearkey') {
+                mainIframe.style.display = 'none'; 
+                clapprContainer.style.display = 'block';
+                
+                clapprPlayer = new Clappr.Player({
+                    source: server.url,
+                    parentId: "#clappr-container",
+                    width: '100%',
+                    height: '100%',
+                    autoPlay: true,
+                    plugins: [DashShakaPlayback],
+                    shakaConfiguration: {
+                        drm: { clearKeys: { [server.keyId]: server.key } }
+                    },
+                    mediacontrol: { seekbar: "#00ff66", buttons: "#ffffff" }
+                });
 
-            clearTimeout(streamTimeout);
-            if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
-            mainVideo.pause(); mainVideo.removeAttribute('src'); mainVideo.load();
-            mainIframe.src = "";
+                clapprPlayer.once(Clappr.Events.PLAYER_PLAY, () => { playerOverlay.style.opacity = '0'; });
+                clapprPlayer.once(Clappr.Events.PLAYER_ERROR, () => {
+                    if(server.embedUrl) switchToEmbed(server.embedUrl);
+                    else { playerOverlay.style.opacity = '1'; playerMsg.innerHTML = 'Stream Offline or Blocked.'; }
+                });
 
-            const isM3U8 = url.includes('.m3u8') || url.includes('.ts') || url.includes('.m3u');
+            } 
+            else if (server.type === 'hls' || server.url.includes('.m3u8')) {
+                mainIframe.style.display = 'none'; 
+                clapprContainer.style.display = 'block';
+                
+                clapprPlayer = new Clappr.Player({
+                    source: server.url,
+                    parentId: "#clappr-container",
+                    width: '100%',
+                    height: '100%',
+                    autoPlay: true,
+                    mediacontrol: { seekbar: "#00ff66", buttons: "#ffffff" }
+                });
 
-            if (isM3U8) {
-                mainIframe.style.display = 'none'; mainVideo.style.display = 'block';
-                if (Hls.isSupported()) {
-                    hlsInstance = new Hls(); hlsInstance.loadSource(url); hlsInstance.attachMedia(mainVideo);
-                    hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-                        clearTimeout(streamTimeout); 
-                        mainVideo.play().catch(e => console.log("Autoplay prevented"));
-                        playerOverlay.style.opacity = '0'; setTimeout(() => { playerOverlay.style.pointerEvents = 'none'; }, 400);
-                    });
-                    hlsInstance.on(Hls.Events.ERROR, function(event, data) {
-                        if (data.fatal) {
-                            clearTimeout(streamTimeout); playerOverlay.style.opacity = '1'; playerMsg.style.color = '#ff4444';
-                            playerMsg.innerHTML = 'Stream error. CORS blocked or offline.';
-                        }
-                    });
-                } else if (mainVideo.canPlayType('application/vnd.apple.mpegurl')) {
-                    mainVideo.src = url;
-                    mainVideo.addEventListener('loadedmetadata', function() {
-                        clearTimeout(streamTimeout); mainVideo.play(); playerOverlay.style.opacity = '0';
-                        setTimeout(() => { playerOverlay.style.pointerEvents = 'none'; }, 400);
-                    });
-                    mainVideo.addEventListener('error', function() {
-                        clearTimeout(streamTimeout); playerOverlay.style.opacity = '1'; playerMsg.style.color = '#ff4444';
-                        playerMsg.innerHTML = 'Stream error. Offline.';
-                    });
-                }
-            } else {
-                mainVideo.style.display = 'none'; mainIframe.style.display = 'block'; mainIframe.src = url;
-                mainIframe.onload = () => {
-                    clearTimeout(streamTimeout); playerOverlay.style.opacity = '0';
-                    setTimeout(() => { playerOverlay.style.pointerEvents = 'none'; }, 400);
-                };
+                clapprPlayer.once(Clappr.Events.PLAYER_PLAY, () => { playerOverlay.style.opacity = '0'; });
+                clapprPlayer.once(Clappr.Events.PLAYER_ERROR, () => {
+                    if(server.embedUrl) switchToEmbed(server.embedUrl);
+                    else { playerOverlay.style.opacity = '1'; playerMsg.innerHTML = 'Stream Offline or Blocked.'; }
+                });
+            } 
+            else {
+                switchToEmbed(server.embedUrl || server.url);
             }
-
-            streamTimeout = setTimeout(() => {
-                playerOverlay.style.opacity = '1'; playerMsg.style.color = '#ff4444';
-                playerMsg.innerHTML = 'Connection timeout. Please try another server.';
-            }, 15000); 
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCategories();
-            renderChannels();
-            
-            if (rawServers.length > 0) setTimeout(() => loadStream(rawServers[0].url), 200);
+        async function loadChannels() {
+            try {
+                const response = await fetch('./channels.json');
+                const data = await response.json();
+                rawServers = data.servers || [];
+                renderCategories();
+                renderChannels();
+                if (rawServers.length > 0) loadStream(rawServers[0]);
+            } catch (error) { console.error(error); }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadChannels();
+            setInterval(() => { document.getElementById('local-time').textContent = new Date().toLocaleTimeString('en-US', {hour12: false}); }, 1000);
 
             // ESPN free public API (no key, no signup) — FIFA World Cup feed
             const ESPN_URL = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard";
@@ -483,7 +405,7 @@
                             const d = new Date(m.date);
                             const t = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                             const ds = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                            html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background:rgba(0,0,0,0.5); border:1px solid var(--glass-border); border-radius:8px;"><div style="display:flex; align-items:center; gap:10px;">${m.home.logo?`<img src="${m.home.logo}" width="24">`:''}<span style="font-weight:bold; font-size:0.9rem;">${m.home.name} <span style="color:#888;">vs</span> ${m.away.name}</span>${m.away.logo?`<img src="${m.away.logo}" width="24">`:''}</div><div style="text-align:right;"><div style="color:var(--electric-cyan); font-weight:bold; font-size:0.9rem;">${t}</div><div style="color:#888; font-size:0.75rem;">${ds}</div></div></div>`;
+                            html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background:rgba(255,255,255,0.03); border:1px solid var(--glass-border); border-radius:8px;"><div style="display:flex; align-items:center; gap:10px;">${m.home.logo?`<img src="${m.home.logo}" width="24">`:''}<span style="font-weight:bold; font-size:0.9rem;">${m.home.name} <span style="color:#888;">vs</span> ${m.away.name}</span>${m.away.logo?`<img src="${m.away.logo}" width="24">`:''}</div><div style="text-align:right;"><div style="color:var(--electric-cyan); font-weight:bold; font-size:0.9rem;">${t}</div><div style="color:#888; font-size:0.75rem;">${ds}</div></div></div>`;
                         });
                         html += '</div>';
                         fixContainer.innerHTML = html;
@@ -499,14 +421,6 @@
             fetchRealFootballData();
             setInterval(fetchRealFootballData, 60000);
             
-            setInterval(() => { document.getElementById('local-time').textContent = new Date().toLocaleTimeString('en-US', {hour12: false}); }, 1000);
-            document.querySelectorAll('.glass-panel').forEach(panel => {
-                panel.addEventListener('mousemove', e => {
-                    const rect = panel.getBoundingClientRect();
-                    panel.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-                    panel.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-                });
-            });
             const canvas = document.getElementById('particles-bg'); const ctx = canvas.getContext('2d'); let particles = [];
             function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
             window.addEventListener('resize', resizeCanvas); resizeCanvas();
@@ -518,6 +432,14 @@
             for(let i=0; i<100; i++) particles.push(new Particle());
             function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
             animateParticles();
+            
+            document.querySelectorAll('.glass-panel').forEach(panel => {
+                panel.addEventListener('mousemove', e => {
+                    const rect = panel.getBoundingClientRect();
+                    panel.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                    panel.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                });
+            });
         });
     </script>
 </body>

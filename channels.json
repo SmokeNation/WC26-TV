@@ -38,7 +38,7 @@
     },
     {
       "name": "FOX (4K HEVC)",
-      "url": "https://xyzstreams.shop/wc-5-embed.html",
+      "url": "https://inproviszon.st/tsn4k.m3u8",
       "embedUrl": "https://xyzstreams.shop/wc-5-embed.html",
       "category": "FIFA World Cup,4K",
       "type": "embed"
@@ -121,8 +121,15 @@
       "type": "embed"
     },
     {
-      "name": "beIN Max 4K (Arabic) (HEVC)",
+      "name": "beIN Max  (Arabic) (HEVC)",
       "url": "https://xyzstreams.shop/wc-10-embed.html",
+      "embedUrl": "https://xyzstreams.shop/wc-11-embed.html",
+      "category": "FIFA World Cup,Sports,4K",
+      "type": "embed"
+    },
+    {
+      "name": "beIN Max 4k  (Arabic) (HEVC)",
+      "url": " https://xyzstreams.shop/wc-10-embed.html",
       "embedUrl": "https://xyzstreams.shop/wc-11-embed.html",
       "category": "FIFA World Cup,Sports,4K",
       "type": "embed"

@@ -6,6 +6,8 @@
     <title>PK STREAMZ | WORLD CUP 26</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet">
     
+    <!-- HLS.js engine for .m3u8 (Clappr + Shaka used ONLY for DRM/MPEG-DASH) -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dash-shaka-playback@3.0.0/dist/dash-shaka-playback.min.js"></script>
     
@@ -155,6 +157,9 @@
                 <iframe id="main-iframe" src="" allowfullscreen="true" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" scrolling="no" frameborder="0" style="display:none;"></iframe>
                 
                 <div id="clappr-container" style="display:none; width:100%; height:100%; position:absolute; top:0; left:0; z-index:2;"></div>
+
+                <!-- Native HLS.js player -->
+                <video id="native-hls-player" controls autoplay playsinline style="display:none; width:100%; height:100%; position:absolute; top:0; left:0; z-index:3; background:#000;"></video>
             </div>
             
             <div class="glass-panel">
@@ -207,16 +212,21 @@
         window.addEventListener('beforeunload', () => window.scrollTo(0, 0));
 
         let rawServers = [];
-        let favorites = JSON.parse(localStorage.getItem('rs_favs')) || [];
+        let favorites = [];
+        try { favorites = JSON.parse(localStorage.getItem('rs_favs')) || []; }
+        catch (e) { favorites = []; localStorage.removeItem('rs_favs'); }
+
         let activeCategory = "All";
         let currentPlayingUrl = "";
         
         let clapprPlayer = null;
+        let pureHlsInstance = null;
 
         const serverContainer = document.getElementById('server-container');
         const categoryContainer = document.getElementById('category-container');
         const mainIframe = document.getElementById('main-iframe');
         const clapprContainer = document.getElementById('clappr-container');
+        const nativeHlsPlayer = document.getElementById('native-hls-player');
         const playerOverlay = document.getElementById('player-overlay');
         const playerMsg = document.getElementById('player-msg');
         const playerWrapper = document.getElementById('player-container');
@@ -230,15 +240,23 @@
         });
 
         function switchToEmbed(embedUrl) {
-            clapprContainer.style.display = 'none';
+            if (!embedUrl || embedUrl.includes('.m3u8') || embedUrl.includes('.mpd')) {
+                playerOverlay.style.opacity = '1';
+                playerMsg.innerHTML = '⚠️ Stream Offline or Unsupported by this Browser.';
+                return;
+            }
+            stopAllPlayers();
             mainIframe.style.display = 'block';
             mainIframe.src = embedUrl;
             playerOverlay.style.opacity = '0';
         }
 
-        async function stopAllPlayers() {
+        function stopAllPlayers() {
             if (clapprPlayer) { clapprPlayer.destroy(); clapprPlayer = null; }
-            mainIframe.src = "";
+            if (pureHlsInstance) { pureHlsInstance.destroy(); pureHlsInstance = null; }
+            mainIframe.src = ""; mainIframe.style.display = 'none';
+            clapprContainer.style.display = 'none';
+            nativeHlsPlayer.style.display = 'none'; nativeHlsPlayer.pause(); nativeHlsPlayer.src = "";
         }
 
         function renderCategories() {
@@ -283,61 +301,52 @@
             });
         }
 
-        // 🚀 CLAPPR PLAYER LOGIC (With DRM Support)
+        // 🚀 PLAYER LOGIC — hls.js for .m3u8, Clappr+Shaka for DRM/MPD, iframe for embeds
         async function loadStream(server) {
             currentPlayingUrl = server.url;
             renderChannels();
             playerOverlay.style.opacity = '1';
             playerMsg.innerHTML = 'CONNECTING SECURELY...';
             
-            await stopAllPlayers();
+            stopAllPlayers();
 
             if (server.type === 'mpd' && server.drm_type === 'clearkey') {
-                mainIframe.style.display = 'none'; 
                 clapprContainer.style.display = 'block';
-                
                 clapprPlayer = new Clappr.Player({
-                    source: server.url,
-                    parentId: "#clappr-container",
-                    width: '100%',
-                    height: '100%',
-                    autoPlay: true,
+                    source: server.url, parentId: "#clappr-container",
+                    width: '100%', height: '100%', autoPlay: true,
                     plugins: [DashShakaPlayback],
-                    shakaConfiguration: {
-                        drm: { clearKeys: { [server.keyId]: server.key } }
-                    },
+                    shakaConfiguration: { drm: { clearKeys: { [server.keyId]: server.key } } },
                     mediacontrol: { seekbar: "#00ff66", buttons: "#ffffff" }
                 });
-
                 clapprPlayer.once(Clappr.Events.PLAYER_PLAY, () => { playerOverlay.style.opacity = '0'; });
-                clapprPlayer.once(Clappr.Events.PLAYER_ERROR, () => {
-                    if(server.embedUrl) switchToEmbed(server.embedUrl);
-                    else { playerOverlay.style.opacity = '1'; playerMsg.innerHTML = 'Stream Offline or Blocked.'; }
-                });
-
+                clapprPlayer.once(Clappr.Events.PLAYER_ERROR, () => { switchToEmbed(server.embedUrl); });
             } 
             else if (server.type === 'hls' || server.url.includes('.m3u8')) {
-                mainIframe.style.display = 'none'; 
-                clapprContainer.style.display = 'block';
+                nativeHlsPlayer.style.display = 'block';
                 
-                clapprPlayer = new Clappr.Player({
-                    source: server.url,
-                    parentId: "#clappr-container",
-                    width: '100%',
-                    height: '100%',
-                    autoPlay: true,
-                    mediacontrol: { seekbar: "#00ff66", buttons: "#ffffff" }
-                });
-
-                clapprPlayer.once(Clappr.Events.PLAYER_PLAY, () => { playerOverlay.style.opacity = '0'; });
-                clapprPlayer.once(Clappr.Events.PLAYER_ERROR, () => {
-                    if(server.embedUrl) switchToEmbed(server.embedUrl);
-                    else { playerOverlay.style.opacity = '1'; playerMsg.innerHTML = 'Stream Offline or Blocked.'; }
-                });
+                if (Hls.isSupported()) {
+                    pureHlsInstance = new Hls({ maxBufferLength: 30, liveSyncDuration: 10 });
+                    pureHlsInstance.loadSource(server.url);
+                    pureHlsInstance.attachMedia(nativeHlsPlayer);
+                    
+                    pureHlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+                        playerOverlay.style.opacity = '0';
+                        nativeHlsPlayer.play().catch(e => console.log("Autoplay blocked"));
+                    });
+                    pureHlsInstance.on(Hls.Events.ERROR, (event, data) => {
+                        if (data.fatal) switchToEmbed(server.embedUrl);
+                    });
+                } 
+                else if (nativeHlsPlayer.canPlayType('application/vnd.apple.mpegurl')) { 
+                    nativeHlsPlayer.src = server.url;
+                    nativeHlsPlayer.addEventListener('loadedmetadata', () => {
+                        playerOverlay.style.opacity = '0'; nativeHlsPlayer.play();
+                    });
+                    nativeHlsPlayer.addEventListener('error', () => { switchToEmbed(server.embedUrl); });
+                } else { switchToEmbed(server.embedUrl); }
             } 
-            else {
-                switchToEmbed(server.embedUrl || server.url);
-            }
+            else { switchToEmbed(server.embedUrl || server.url); }
         }
 
         async function loadChannels() {

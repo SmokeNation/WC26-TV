@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-21",
+  "updated": "2026-06-24",
   "servers": [
     {
       "name": "TNS (FHD)",
@@ -38,16 +38,16 @@
     },
     {
       "name": "FOX (4K HEVC)",
-      "url": "https://inproviszon.st/tsn4k.m3u8",
-      "embedUrl": "https://xyzstreams.shop/wc-5-embed.html",
-      "category": "FIFA World Cup,4K",
+      "url": "https://inproviszon.st/fox4k-1.m3u8",
+      "embedUrl": "",
+      "category": "FIFA World Cup,Sports,4K",
       "type": "hls"
     },
     {
       "name": "US (EN) FOX 4K (HEVC)",
       "url": "https://xyzstreams.shop/wc-5-embed.html",
       "embedUrl": "https://xyzstreams.shop/wc-5-embed.html",
-      "category": "FIFA World Cup,Sports",
+      "category": "FIFA World Cup,Sports,4K",
       "type": "embed"
     },
     {
@@ -59,10 +59,10 @@
     },
     {
       "name": "TSN (4K HEVC)",
-      "url": "https://xyzstreams.shop/wc-8-embed.html",
-      "embedUrl": "https://xyzstreams.shop/wc-8-embed.html",
-      "category": "Sports,FIFA World Cup,4K",
-      "type": "embed"
+      "url": "https://inproviszon.st/tsn4k.m3u8",
+      "embedUrl": "",
+      "category": "FIFA World Cup,Sports,4K",
+      "type": "hls"
     },
     {
       "name": "🇨🇦 (EN) TSN 4K",
@@ -121,15 +121,15 @@
       "type": "embed"
     },
     {
-      "name": "beIN Max  (Arabic) (HEVC)",
+      "name": "beIN Max (Arabic) (HEVC)",
       "url": "https://xyzstreams.shop/wc-10-embed.html",
       "embedUrl": "https://xyzstreams.shop/wc-11-embed.html",
       "category": "FIFA World Cup,Sports,4K",
       "type": "embed"
     },
     {
-      "name": "beIN Max 4k  (Arabic) (HEVC)",
-      "url": " https://xyzstreams.shop/wc-10-embed.html",
+      "name": "beIN Max 4K (Arabic) (HEVC)",
+      "url": "https://xyzstreams.shop/wc-10-embed.html",
       "embedUrl": "https://xyzstreams.shop/wc-11-embed.html",
       "category": "FIFA World Cup,Sports,4K",
       "type": "embed"

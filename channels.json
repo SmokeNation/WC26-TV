@@ -2,6 +2,13 @@
   "updated": "2026-06-24",
   "servers": [
     {
+      "name": "Toffe ",
+      "url": "https://sm-monirul.top/tof/live/gervsivo/index.m3u8",
+      "embedUrl": "https://xyzstreams.shop/wc-1-embed",
+      "category": "FIFA World Cup,Sports",
+      "type": "hls"
+    },
+    {
       "name": "TNS (FHD)",
       "url": "https://embed.st/embed/admin/ppv-tunisia-vs-japan/1",
       "embedUrl": "https://xyzstreams.shop/wc-1-embed",
@@ -94,7 +101,7 @@
     },
     {
       "name": "Somoy TV",
-      "url": "https://live.thebosstv.com:30443/dwlive/Somoy-TV/chunks.m3u8",
+      "url":  "http://ubuntu.moonplex.net:8080/Somoy_TV/index.m3u8",
       "embedUrl": "",
       "category": "Bangladesh",
       "type": "hls"
